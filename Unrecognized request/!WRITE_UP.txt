@@ -1,0 +1,11 @@
+1. Открываем pcap в WhireShark, ищем передачу самаого файла в TCP трафике:
+- Знаем, что отправка была с локального IP на внешний, находим пакет с флагами [PSH, ACK], такой пакет один, значит все данные в нем.
+- Находим в поле Data HEX данные, первые байты 50 4b, значит это ZIP папка (Узнать это можно тут: https://ru.wikipedia.org/wiki/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA_%D1%81%D0%B8%D0%B3%D0%BD%D0%B0%D1%82%D1%83%D1%80_%D1%84%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2)
+- Вытаскиваем этот файл: ПКМ по Data -> Экспортировать байты пакета -> Сохраняем как file.zip
+2. В архиве находится flag.txt файл, но чтобы его прочитать, нужно ввести пароль
+- Поиск пароля в дампе ни к чему хорошему не привел, поэтому брутим пароль (Я делал на Linux с установленным python3, видео тут https://www.youtube.com/watch?v=oheCXa_IEfk&t=413s):
+- Скачиваем скрипт zipdump.py (https://github.com/DidierStevens/DidierStevensSuite/blob/master/zipdump.py)
+- Берем словарь паролей, например rockyou.txt
+- Перед использованием "чиним" словарь для скрипта, sed 's/[\x7e-\xff]//g' rockyou.txt > rockyou_1.txt
+- Используем скрипт на питоне python3 zipdump.py --passwordfilestop=rockyou_1.txt files.zip
+- Находим нужный пароль, открываем flag.txt, получаем флаг
